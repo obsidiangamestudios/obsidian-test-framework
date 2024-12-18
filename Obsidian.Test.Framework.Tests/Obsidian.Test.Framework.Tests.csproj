@@ -22,6 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Obsidian.Test.Framework.SqlSever\Obsidian.Test.Framework.SqlSever.csproj" />
       <ProjectReference Include="..\Obsidian.Test.Framework\Obsidian.Test.Framework.csproj" />
     </ItemGroup>
 

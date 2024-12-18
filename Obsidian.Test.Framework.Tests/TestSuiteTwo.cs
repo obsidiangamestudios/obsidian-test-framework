@@ -6,15 +6,14 @@ namespace Obsidian.Test.Framework.Tests;
 public class TestSuiteTwo : IAsyncDisposable
 {
     private DbInfo _dbInfo;
-    private TestDbContext context;
-
+    private TestDbContext _context;
 
     [SetUp]
     public async Task InitializeEachRun()
     {
         _dbInfo = GlobalDatabaseSetupFixture.DatabaseFixture.TakeOne();
-        context = GetDbContext();
-        await context.Database.EnsureCreatedAsync();
+        _context = GetDbContext();
+        await _context.Database.EnsureCreatedAsync();
         await GlobalDatabaseSetupFixture.DatabaseFixture.ResetDatabaseAsync(_dbInfo);
     }
 
@@ -22,7 +21,7 @@ public class TestSuiteTwo : IAsyncDisposable
     public async Task ReleaseEachRun()
     {
         GlobalDatabaseSetupFixture.DatabaseFixture.ReturnOne(_dbInfo);
-        await context.DisposeAsync();
+        await _context.DisposeAsync();
     }
 
 
@@ -37,22 +36,22 @@ public class TestSuiteTwo : IAsyncDisposable
     [Test]
     public async Task CheckIfPostCollectionIsEmpty()
     {
-        Assert.That(await context.Posts.CountAsync(), Is.EqualTo(0));
+        Assert.That(await _context.Posts.CountAsync(), Is.EqualTo(0));
     }
 
     [Test]
     public async Task CreateOnePost()
     {
         var post = new Post { Name = "Post 1" };
-        context.Posts.Add(post);
-        await context.SaveChangesAsync();
-        Assert.That(await context.Posts.CountAsync(), Is.EqualTo(1));
+        _context.Posts.Add(post);
+        await _context.SaveChangesAsync();
+        Assert.That(await _context.Posts.CountAsync(), Is.EqualTo(1));
     }
 
     public async ValueTask DisposeAsync()
     {
 
-        await context.DisposeAsync();
+        await _context.DisposeAsync();
     }
 
     [Test]

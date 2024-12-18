@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Obsidian.Test.Framework.Tests;
 
+
 [Parallelizable(ParallelScope.All)]
 public class TestSuiteOne : IAsyncDisposable
 {
@@ -57,7 +58,6 @@ public class TestSuiteOne : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
-
         await context.DisposeAsync();
     }
 }

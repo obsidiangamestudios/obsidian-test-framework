@@ -1,4 +1,6 @@
-﻿[assembly: LevelOfParallelism(1)]
+﻿using Obsidian.Test.Framework.SqlSever;
+
+[assembly: LevelOfParallelism(1)]
 
 namespace Obsidian.Test.Framework.Tests;
 

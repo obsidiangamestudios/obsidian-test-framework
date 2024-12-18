@@ -1,0 +1,9 @@
+﻿{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "DebugRoslynSourceGenerator": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "../Obsidian.Test.Framework.Tests/Obsidian.Test.Framework.Tests.csproj"
+    }
+  }
+}

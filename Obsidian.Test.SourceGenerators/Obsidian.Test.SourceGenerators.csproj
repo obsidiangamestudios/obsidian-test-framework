@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <IsPackable>false</IsPackable>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <IsRoslynComponent>true</IsRoslynComponent>
+
+        <RootNamespace>Obsidian.Test.SourceGenerators</RootNamespace>
+        <PackageId>Obsidian.Test.SourceGenerators</PackageId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2"/>
+<!--        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.9.2"/>-->
+        <PackageReference Include="System.Text.Json" Version="5.0.1" PrivateAssets="all" />
+<!--        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />-->
+    </ItemGroup>
+<!--    <PropertyGroup>-->
+<!--        <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>-->
+<!--    </PropertyGroup>-->
+
+<!--    <Target Name="GetDependencyTargetPaths">-->
+<!--        <ItemGroup>-->
+<!--&lt;!&ndash;            <TargetPathWithTargetPlatformMoniker Include="$(PKGPluralize_NET)\lib\netstandard2.0\Pluralize.NET.dll" IncludeRuntimeDependency="false" />&ndash;&gt;-->
+<!--            <TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_Text_Json)\lib\netstandard2.0\System.Text.Json.dll" IncludeRuntimeDependency="false" />-->
+<!--        </ItemGroup>-->
+<!--    </Target>-->
+
+</Project>

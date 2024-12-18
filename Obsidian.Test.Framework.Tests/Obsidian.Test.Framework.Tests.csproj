@@ -22,8 +22,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Obsidian.Test.Framework.SqlSever\Obsidian.Test.Framework.SqlSever.csproj" />
+      <ProjectReference Include="..\Obsidian.Test.Framework.SqlServer\Obsidian.Test.Framework.SqlServer.csproj" />
       <ProjectReference Include="..\Obsidian.Test.Framework\Obsidian.Test.Framework.csproj" />
+      <ProjectReference Include="..\Obsidian.Test.SourceGenerators\Obsidian.Test.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     </ItemGroup>
 
 </Project>

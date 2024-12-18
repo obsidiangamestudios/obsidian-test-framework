@@ -2,27 +2,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Obsidian.Test.Framework.Tests;
 
-
+[DatabaseTestSuite(typeof(GlobalDatabaseSetupFixture))]
 [Parallelizable(ParallelScope.All)]
-public class TestSuiteOne : IAsyncDisposable
+public partial class TestSuiteOne
 {
-    private DbInfo _dbInfo;
     private TestDbContext context;
 
-
-    [SetUp]
-    public async Task InitializeEachRun()
+    protected partial async Task OnSetupAsync()
     {
-        _dbInfo = GlobalDatabaseSetupFixture.DatabaseFixture.TakeOne();
         context = GetDbContext();
         await context.Database.EnsureCreatedAsync();
-        await GlobalDatabaseSetupFixture.DatabaseFixture.ResetDatabaseAsync(_dbInfo);
     }
 
-    [TearDown]
-    public async Task ReleaseEachRun()
+    protected partial async Task OnTearDownAsync()
     {
-        GlobalDatabaseSetupFixture.DatabaseFixture.ReturnOne(_dbInfo);
+        GlobalDatabaseSetupFixture.DatabaseFixture.ReturnOne(CurrentDbInfo);
         await context.DisposeAsync();
     }
 
@@ -30,7 +24,7 @@ public class TestSuiteOne : IAsyncDisposable
     private TestDbContext GetDbContext()
     {
         var optionsBuilder = new DbContextOptionsBuilder<TestDbContext>();
-        optionsBuilder.UseSqlServer(_dbInfo.ConnectionString);
+        optionsBuilder.UseSqlServer(CurrentDbInfo.ConnectionString);
 
         return new TestDbContext(optionsBuilder.Options);
     }
@@ -56,7 +50,7 @@ public class TestSuiteOne : IAsyncDisposable
         await Task.Delay(1000);
     }
 
-    public async ValueTask DisposeAsync()
+    protected async partial Task OnDisposeAsync()
     {
         await context.DisposeAsync();
     }

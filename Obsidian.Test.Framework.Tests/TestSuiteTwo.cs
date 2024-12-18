@@ -3,24 +3,19 @@ using Microsoft.EntityFrameworkCore;
 namespace Obsidian.Test.Framework.Tests;
 
 [Parallelizable(ParallelScope.All)]
-public class TestSuiteTwo : IAsyncDisposable
+[DatabaseTestSuite(typeof(GlobalDatabaseSetupFixture))]
+public partial class TestSuiteTwo : IAsyncDisposable
 {
-    private DbInfo _dbInfo;
     private TestDbContext _context;
 
-    [SetUp]
-    public async Task InitializeEachRun()
+    protected async partial Task OnSetupAsync()
     {
-        _dbInfo = GlobalDatabaseSetupFixture.DatabaseFixture.TakeOne();
         _context = GetDbContext();
         await _context.Database.EnsureCreatedAsync();
-        await GlobalDatabaseSetupFixture.DatabaseFixture.ResetDatabaseAsync(_dbInfo);
     }
 
-    [TearDown]
-    public async Task ReleaseEachRun()
+    protected async partial Task OnTearDownAsync()
     {
-        GlobalDatabaseSetupFixture.DatabaseFixture.ReturnOne(_dbInfo);
         await _context.DisposeAsync();
     }
 
@@ -28,7 +23,7 @@ public class TestSuiteTwo : IAsyncDisposable
     private TestDbContext GetDbContext()
     {
         var optionsBuilder = new DbContextOptionsBuilder<TestDbContext>();
-        optionsBuilder.UseSqlServer(_dbInfo.ConnectionString);
+        optionsBuilder.UseSqlServer(CurrentDbInfo.ConnectionString);
 
         return new TestDbContext(optionsBuilder.Options);
     }
@@ -48,9 +43,8 @@ public class TestSuiteTwo : IAsyncDisposable
         Assert.That(await _context.Posts.CountAsync(), Is.EqualTo(1));
     }
 
-    public async ValueTask DisposeAsync()
+    protected partial async Task OnDisposeAsync()
     {
-
         await _context.DisposeAsync();
     }
 

@@ -1,7 +1,7 @@
 using System.Data.Common;
 using Microsoft.Data.SqlClient;
 
-namespace Obsidian.Test.Framework.SqlSever;
+namespace Obsidian.Test.Framework.SqlServer;
 
 public class DatabaseIntegrationFixtureSqlServer(string connectionString, int poolSize, string testProjectPrefix) : DatabaseIntegrationFixture(testProjectPrefix)
 {

@@ -6,7 +6,7 @@ namespace Obsidian.Test.Framework.Tests;
 [DatabaseTestSuite(typeof(GlobalDatabaseSetupFixture))]
 public partial class TestSuiteTwo : IAsyncDisposable
 {
-    private TestDbContext _context;
+    private TestDbContext _context = null!;
 
     protected async partial Task OnSetupAsync()
     {
@@ -18,7 +18,6 @@ public partial class TestSuiteTwo : IAsyncDisposable
     {
         await _context.DisposeAsync();
     }
-
 
     private TestDbContext GetDbContext()
     {
@@ -43,15 +42,12 @@ public partial class TestSuiteTwo : IAsyncDisposable
         Assert.That(await _context.Posts.CountAsync(), Is.EqualTo(1));
     }
 
-    protected partial async Task OnDisposeAsync()
+    protected async partial Task OnDisposeAsync()
     {
         await _context.DisposeAsync();
     }
 
-    [Test]
-    public async Task DelayedTask()
-    {
-        await Task.Delay(1000);
-    }
 
 }
+
+

@@ -6,9 +6,14 @@ namespace Obsidian.Test.SourceGenerators;
 
 public static class RoslynUtils
 {
-
-    public static object? GetAttributeValue(this SeparatedSyntaxList<AttributeArgumentSyntax> arguments, SemanticModel semanticModel, int argumentIndex)
+    public static object? GetAttributeValue(
+        this SeparatedSyntaxList<AttributeArgumentSyntax> arguments,
+        SemanticModel semanticModel,
+        int argumentIndex
+    )
     {
+        if (arguments.Count <= argumentIndex)
+            return null;
         var argument = arguments[argumentIndex]?.Expression;
         if (argument == null)
             return null;
@@ -16,25 +21,45 @@ public static class RoslynUtils
         return semanticModel.GetConstantValue(argument).Value;
     }
 
-    public static bool TryGetClassSymbol(this ClassDeclarationSyntax classDeclarationSyntax, SemanticModel semanticModel, out INamedTypeSymbol? classSymbol)
+    public static bool TryGetClassSymbol(
+        this ClassDeclarationSyntax classDeclarationSyntax,
+        SemanticModel semanticModel,
+        out INamedTypeSymbol? classSymbol
+    )
     {
         classSymbol = semanticModel.GetDeclaredSymbol(classDeclarationSyntax) as INamedTypeSymbol;
         return classSymbol != null;
     }
 
-    public static bool IsInheritingFromGameComponent(this ClassDeclarationSyntax classDeclarationSyntax,
-        SemanticModel semanticModel)
+    public static bool IsInheritingFromGameComponent(
+        this ClassDeclarationSyntax classDeclarationSyntax,
+        SemanticModel semanticModel
+    )
     {
-        return IsInheritingFrom(classDeclarationSyntax, semanticModel, "Obsidian.Framework.GameComponent");
+        return IsInheritingFrom(
+            classDeclarationSyntax,
+            semanticModel,
+            "Obsidian.Framework.GameComponent"
+        );
     }
 
-    public static bool IsInheritingFromGameObject(this ClassDeclarationSyntax classDeclarationSyntax,
-        SemanticModel semanticModel)
+    public static bool IsInheritingFromGameObject(
+        this ClassDeclarationSyntax classDeclarationSyntax,
+        SemanticModel semanticModel
+    )
     {
-        return IsInheritingFrom(classDeclarationSyntax, semanticModel, "Obsidian.Framework.GameObject");
+        return IsInheritingFrom(
+            classDeclarationSyntax,
+            semanticModel,
+            "Obsidian.Framework.GameObject"
+        );
     }
 
-    public static bool IsInheritingFrom(this ClassDeclarationSyntax classDeclarationSyntax, SemanticModel semanticModel, string fullTypeName)
+    public static bool IsInheritingFrom(
+        this ClassDeclarationSyntax classDeclarationSyntax,
+        SemanticModel semanticModel,
+        string fullTypeName
+    )
     {
         if (classDeclarationSyntax.TryGetClassSymbol(semanticModel, out var classSymbol) is false)
             return false;
@@ -49,5 +74,23 @@ public static class RoslynUtils
         }
 
         return false;
+    }
+
+    public static bool TryGetAttributeMethodSymbol(
+        this GeneratorSyntaxContext context,
+        AttributeSyntax attributeSyntax,
+        out IMethodSymbol? methodSymbol
+    )
+    {
+        if (
+            context.SemanticModel.GetSymbolInfo(attributeSyntax).Symbol
+            is not IMethodSymbol attrSymbol
+        )
+        {
+            methodSymbol = null;
+            return false;
+        }
+        methodSymbol = attrSymbol;
+        return true;
     }
 }

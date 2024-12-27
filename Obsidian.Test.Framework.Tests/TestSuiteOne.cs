@@ -1,3 +1,4 @@
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace Obsidian.Test.Framework.Tests;
@@ -17,6 +18,7 @@ public partial class TestSuiteOne
     protected partial async Task OnTearDownAsync()
     {
         GlobalDatabaseSetupFixture.DatabaseFixture.ReturnOne(CurrentDbInfo);
+        await context.Database.CloseConnectionAsync();
         await context.DisposeAsync();
     }
 
@@ -44,11 +46,7 @@ public partial class TestSuiteOne
         Assert.That(await context.Posts.CountAsync(), Is.EqualTo(1));
     }
 
-    [Test]
-    public async Task DelayedTask()
-    {
-        await Task.Delay(1000);
-    }
+
 
     protected async partial Task OnDisposeAsync()
     {

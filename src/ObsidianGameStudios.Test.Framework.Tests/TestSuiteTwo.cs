@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using ObsidianGameStudios.NUnit.Database;
 
-namespace Obsidian.Test.Framework.Tests;
+namespace ObsidianGameStudios.Test.Framework.Tests;
 
 [Parallelizable(ParallelScope.All)]
 [DatabaseTestSuite(typeof(GlobalDatabaseSetupFixture))]
@@ -46,7 +47,6 @@ public partial class TestSuiteTwo : IAsyncDisposable
     {
         await _context.DisposeAsync();
     }
-
 
 }
 

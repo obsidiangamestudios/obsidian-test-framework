@@ -1,7 +1,7 @@
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using ObsidianGameStudios.NUnit.Database;
 
-namespace Obsidian.Test.Framework.Tests;
+namespace ObsidianGameStudios.Test.Framework.Tests;
 
 [DatabaseTestSuite(typeof(GlobalDatabaseSetupFixture))]
 [Parallelizable(ParallelScope.All)]
@@ -17,7 +17,7 @@ public partial class TestSuiteOne
 
     protected partial async Task OnTearDownAsync()
     {
-        GlobalDatabaseSetupFixture.DatabaseFixture.ReturnOne(CurrentDbInfo);
+        ObsidianGameStudios.Test.Framework.Tests.GlobalDatabaseSetupFixture.DatabaseFixture.ReturnOne(CurrentDbInfo);
         await context.Database.CloseConnectionAsync();
         await context.DisposeAsync();
     }

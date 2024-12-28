@@ -1,8 +1,7 @@
-using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Obsidian.Test.SourceGenerators;
+namespace ObsidianGameStudios.NUnit.Database.SourceGenerators;
 
 public static class RoslynUtils
 {

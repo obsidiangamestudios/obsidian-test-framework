@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace Obsidian.Test.Framework.Tests;
+namespace ObsidianGameStudios.Test.Framework.Tests;
 
 public class Post
 {

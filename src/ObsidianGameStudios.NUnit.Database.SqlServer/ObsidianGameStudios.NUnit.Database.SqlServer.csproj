@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>ObsidianGameStudios.NUnit.Database.SqlServer</RootNamespace>
+        <IsPackable>true</IsPackable>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ObsidianGameStudios.NUnit.Database\ObsidianGameStudios.NUnit.Database.csproj" />
+    </ItemGroup>
+
+</Project>

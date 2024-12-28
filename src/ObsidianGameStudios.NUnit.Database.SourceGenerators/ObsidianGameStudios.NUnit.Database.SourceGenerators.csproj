@@ -5,12 +5,12 @@
         <IsPackable>false</IsPackable>
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
-
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
         <IsRoslynComponent>true</IsRoslynComponent>
 
-        <RootNamespace>Obsidian.Test.SourceGenerators</RootNamespace>
-        <PackageId>Obsidian.Test.SourceGenerators</PackageId>
+        <RootNamespace>ObsidianGameStudios.NUnit.Database.SourceGenerators</RootNamespace>
+        <PackageId>ObsidianGameStudios.NUnit.Database.SourceGenerators</PackageId>
     </PropertyGroup>
 
     <ItemGroup>

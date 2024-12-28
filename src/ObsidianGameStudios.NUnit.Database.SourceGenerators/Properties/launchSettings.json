@@ -3,7 +3,7 @@
   "profiles": {
     "DebugRoslynSourceGenerator": {
       "commandName": "DebugRoslynComponent",
-      "targetProject": "../Obsidian.Test.Framework.Tests/Obsidian.Test.Framework.Tests.csproj"
+      "targetProject": "../ObsidianGameStudios.Test.Framework.Tests/ObsidianGameStudios.Test.Framework.Tests.csproj"
     }
   }
 }

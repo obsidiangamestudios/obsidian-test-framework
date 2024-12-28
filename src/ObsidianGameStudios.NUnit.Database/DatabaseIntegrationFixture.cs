@@ -1,9 +1,8 @@
 ﻿using System.Data.Common;
-using System.Data.SqlClient;
 using Respawn;
 using Respawn.Graph;
 
-namespace Obsidian.Test.Framework;
+namespace ObsidianGameStudios.NUnit.Database;
 
 public abstract class DatabaseIntegrationFixture(string testProjectPrefix) : IAsyncDisposable
 {

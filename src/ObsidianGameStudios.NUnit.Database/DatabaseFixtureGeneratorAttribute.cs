@@ -1,4 +1,4 @@
-namespace Obsidian.Test.Framework;
+namespace ObsidianGameStudios.NUnit.Database;
 
 [AttributeUsage(AttributeTargets.Class)]
 public class DatabaseFixtureGeneratorAttribute : Attribute

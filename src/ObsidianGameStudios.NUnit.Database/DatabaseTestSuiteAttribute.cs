@@ -1,13 +1,7 @@
 namespace ObsidianGameStudios.NUnit.Database;
 
 [AttributeUsage(AttributeTargets.Class)]
-public class DatabaseTestSuiteAttribute : Attribute
+public class DatabaseTestSuiteAttribute(Type setupFixtureType) : Attribute
 {
-    public Type SetupFixtureType { get; }
-
-
-    public DatabaseTestSuiteAttribute(Type setupFixtureType)
-    {
-        SetupFixtureType = setupFixtureType;
-    }
+    public Type SetupFixtureType { get; } = setupFixtureType;
 }

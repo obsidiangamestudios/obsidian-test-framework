@@ -1,24 +1,15 @@
 namespace ObsidianGameStudios.NUnit.Database;
 
 [AttributeUsage(AttributeTargets.Class)]
-public class DatabaseFixtureGeneratorAttribute : Attribute
+public class DatabaseFixtureGeneratorAttribute(
+    string connectionStringName,
+    DatabaseProvider provider,
+    int poolSize,
+    bool dropDatabase = false)
+    : Attribute
 {
-    public string ConnectionStringName { get; }
-    public DatabaseProvider Provider { get; }
-    public int PoolSize { get; }
-
-    public bool DropDatabase { get; }
-
-    public DatabaseFixtureGeneratorAttribute(
-        string connectionStringName,
-        DatabaseProvider provider,
-        int poolSize,
-        bool dropDatabase = false
-    )
-    {
-        ConnectionStringName = connectionStringName;
-        Provider = provider;
-        PoolSize = poolSize;
-        DropDatabase = dropDatabase;
-    }
+    public string ConnectionStringName { get; } = connectionStringName;
+    public DatabaseProvider Provider { get; } = provider;
+    public int PoolSize { get; } = poolSize;
+    public bool DropDatabase { get; } = dropDatabase;
 }

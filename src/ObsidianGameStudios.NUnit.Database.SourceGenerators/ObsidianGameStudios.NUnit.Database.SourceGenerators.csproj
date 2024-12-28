@@ -13,14 +13,28 @@
         <PackageId>ObsidianGameStudios.NUnit.Database.SourceGenerators</PackageId>
     </PropertyGroup>
 
+
+    <PropertyGroup Label="Packaging props">
+        <Version>0.5.0</Version>
+        <Copyright>Obsidian Game Studios</Copyright>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <Description>A simple framework for managing database integration tests with a db pool</Description>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Nullable>enable</Nullable>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <ContinuosIntegrationBuild>true</ContinuosIntegrationBuild>
+    </PropertyGroup>
+
     <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0">
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" >
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
 <!--        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.9.2"/>-->
-        <PackageReference Include="System.Text.Json" Version="5.0.1" PrivateAssets="all" />
+        <PackageReference Include="System.Text.Json"  PrivateAssets="all" />
 <!--        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />-->
     </ItemGroup>
 <!--    <PropertyGroup>-->
@@ -33,5 +47,7 @@
 <!--            <TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_Text_Json)\lib\netstandard2.0\System.Text.Json.dll" IncludeRuntimeDependency="false" />-->
 <!--        </ItemGroup>-->
 <!--    </Target>-->
+
+
 
 </Project>

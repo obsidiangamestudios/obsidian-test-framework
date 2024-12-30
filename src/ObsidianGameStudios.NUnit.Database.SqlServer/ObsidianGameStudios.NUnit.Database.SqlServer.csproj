@@ -7,6 +7,7 @@
         <RootNamespace>ObsidianGameStudios.NUnit.Database.SqlServer</RootNamespace>
         <IsPackable>true</IsPackable>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
 
@@ -17,16 +18,36 @@
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <Description>A simple framework for managing database integration tests with a db pool</Description>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+<!--        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>-->
         <Nullable>enable</Nullable>
-        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <ContinuosIntegrationBuild>true</ContinuosIntegrationBuild>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <DebugType>portable</DebugType> <!-- Options: full, portable, embedded -->
+        <DebugSymbols>true</DebugSymbols>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <IncludeSymbols>true</IncludeSymbols>
+    </PropertyGroup>
+
+    <!-- Include README.md -->
+    <ItemGroup>
+        <None Include="../../README.md">
+            <Pack>true</Pack>
+            <PackagePath></PackagePath>
+            <Link>README.md</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.Data.SqlClient"  />
     </ItemGroup>
     <ItemGroup>
+<!--        <Link Include="../../README.md"  />-->
       <ProjectReference Include="..\ObsidianGameStudios.NUnit.Database\ObsidianGameStudios.NUnit.Database.csproj" />
     </ItemGroup>
 

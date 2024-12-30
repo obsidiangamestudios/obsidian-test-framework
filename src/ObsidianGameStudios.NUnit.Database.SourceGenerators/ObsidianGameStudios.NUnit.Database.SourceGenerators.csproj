@@ -25,7 +25,18 @@
         <Nullable>enable</Nullable>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <ContinuosIntegrationBuild>true</ContinuosIntegrationBuild>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
+
+    <!-- Include README.md -->
+    <ItemGroup>
+        <None Include="../../README.md">
+            <Pack>true</Pack>
+            <PackagePath></PackagePath>
+            <Link>README.md</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" >

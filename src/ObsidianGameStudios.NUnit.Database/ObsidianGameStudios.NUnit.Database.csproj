@@ -7,7 +7,29 @@
         <RootNamespace>ObsidianGameStudios.NUnit.Database</RootNamespace>
         <IsPackable>true</IsPackable>
         <Version>0.5.0</Version>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+<!--        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>-->
     </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <DebugType>portable</DebugType> <!-- Options: full, portable, embedded -->
+        <DebugSymbols>true</DebugSymbols>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <IncludeSymbols>true</IncludeSymbols>
+    </PropertyGroup>
+
+    <!-- Include README.md -->
+    <ItemGroup>
+        <None Include="../../README.md">
+            <Pack>true</Pack>
+            <PackagePath></PackagePath>
+            <Link>README.md</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 
     <PropertyGroup Label="Packaging props">
         <Copyright>Obsidian Game Studios</Copyright>

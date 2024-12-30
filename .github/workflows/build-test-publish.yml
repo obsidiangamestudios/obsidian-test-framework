@@ -1,0 +1,95 @@
+name: Build, Test, and Publish
+
+on:
+  push:
+    branches:
+      - '**'
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        ports:
+          - 1433:1433
+        env:
+          ACCEPT_EULA: "Y"
+          SA_PASSWORD: ${{ secrets.SQL_SERVER_PASSWORD }}
+        options: >-
+          --health-cmd "exit 0"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
+          --env SA_PASSWORD=YourStrong!Passw0rd
+          --env ACCEPT_EULA=Y
+
+    env:
+      SQL_SERVER_DB_CONNECTION_STRING: "Server=localhost,1433;Database=master;User Id=sa;Password=${{ secrets.SQL_SERVER_PASSWORD }};TrustServerCertificate=True;"
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore Dependencies
+        run: dotnet restore
+
+      - name: Build Projects
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Run Tests
+        env:
+          SQL_SERVER_DB_CONNECTION_STRING: ${{ env.SQL_SERVER_DB_CONNECTION_STRING }}
+        run: dotnet test --no-build --configuration Release --logger "trx;LogFileName=test_results.trx"
+
+  publish:
+    name: Publish Packages to NuGet
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Extract and Validate Version from Tag
+        id: validate_version
+        run: |
+          TAG_NAME=${GITHUB_REF_NAME}
+          if [[ ! $TAG_NAME =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+)?$ ]]; then
+            echo "Error: Invalid tag version format. Must be a valid semantic version (e.g., v0.5.1)."
+            exit 1
+          fi
+          VERSION=${TAG_NAME#v}
+          echo "PACKAGE_VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Restore Dependencies
+        run: dotnet restore
+
+      - name: Build Projects
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Package Projects with Version
+        run: |
+          dotnet pack --no-build --configuration Release /p:PackageVersion=${{ env.PACKAGE_VERSION }}
+
+      - name: Publish Packages to NuGet
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          dotnet nuget push **/*.nupkg --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json
+          dotnet nuget push **/*.snupkg --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json

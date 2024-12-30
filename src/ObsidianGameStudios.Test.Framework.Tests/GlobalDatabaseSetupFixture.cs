@@ -4,7 +4,7 @@
 
 namespace ObsidianGameStudios.Test.Framework.Tests;
 
-[DatabaseFixtureGenerator("SQL_SERVER_DB_CONNECTION_STRING", DatabaseProvider.SqlServer, 2, dropDatabase: false)]
+[DatabaseFixtureGenerator(connectionStringName: "SQL_SERVER_DB_CONNECTION_STRING", provider: DatabaseProvider.SqlServer, poolSize: 2, dropDatabase: false)]
 public partial class GlobalDatabaseSetupFixture
 {
 

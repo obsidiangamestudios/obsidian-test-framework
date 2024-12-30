@@ -16,7 +16,6 @@ public partial class TestSuiteOne
 
     protected partial async Task OnTearDownAsync()
     {
-        ObsidianGameStudios.Test.Framework.Tests.GlobalDatabaseSetupFixture.DatabaseFixture.ReturnOne(CurrentDbInfo);
         await context.Database.CloseConnectionAsync();
         await context.DisposeAsync();
     }

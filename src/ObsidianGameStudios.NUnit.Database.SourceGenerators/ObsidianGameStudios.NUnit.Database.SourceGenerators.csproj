@@ -10,6 +10,7 @@
         <IsRoslynComponent>true</IsRoslynComponent>
         <RootNamespace>ObsidianGameStudios.NUnit.Database.SourceGenerators</RootNamespace>
         <PackageId>ObsidianGameStudios.NUnit.Database.SourceGenerators</PackageId>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
     </PropertyGroup>
 
 
@@ -42,10 +43,18 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
-<!--        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.9.2"/>-->
         <PackageReference Include="System.Text.Json"  PrivateAssets="all" />
-<!--        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />-->
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" >
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
+
+    <ItemGroup>
+        <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    </ItemGroup>
+
+
 <!--    <PropertyGroup>-->
 <!--        <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>-->
 <!--    </PropertyGroup>-->

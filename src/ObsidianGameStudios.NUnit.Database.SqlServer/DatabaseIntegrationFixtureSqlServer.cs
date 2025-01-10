@@ -1,5 +1,6 @@
 using System.Data.Common;
 using Microsoft.Data.SqlClient;
+using Respawn;
 
 namespace ObsidianGameStudios.NUnit.Database.SqlServer;
 
@@ -16,14 +17,20 @@ public class DatabaseIntegrationFixtureSqlServer(string connectionString, int po
             var dbName = GetDbName(i);
             var dbInfo = new DbInfo(_builder.ConnectionString.Replace(_builder.InitialCatalog, dbName), dbName, i);
             await using var command = mainConnection.CreateCommand();
-            command.CommandText = $"SELECT COUNT(*) FROM sys.databases WHERE name = '{dbName}'";
             Ready.Push(dbInfo);
             All.Add(dbInfo);
-            if ((int)await command.ExecuteScalarAsync() > 0)
-            {
-                continue;
-            }
-            command.CommandText = $"CREATE DATABASE {dbName};ALTER DATABASE [{dbName}] SET RECOVERY SIMPLE;";
+
+            command.CommandText = $"""
+                                    IF NOT EXISTS (
+                                        SELECT name 
+                                        FROM sys.databases 
+                                        WHERE name = '{dbName}'
+                                    )
+                                    BEGIN
+                                        CREATE DATABASE [{dbName}];
+                                        ALTER DATABASE [{dbName}] SET RECOVERY SIMPLE;
+                                    END;
+                                    """;
             await command.ExecuteNonQueryAsync();
             await using var connection = GetConnection(dbInfo);
             await connection.OpenAsync();
@@ -37,6 +44,7 @@ public class DatabaseIntegrationFixtureSqlServer(string connectionString, int po
             Ready.Clear();
             Used.Clear();
             All.Clear();
+
             return;
         }
         await using var mainConnection = new SqlConnection(_builder.ConnectionString);
@@ -51,6 +59,14 @@ public class DatabaseIntegrationFixtureSqlServer(string connectionString, int po
         Ready.Clear();
         Used.Clear();
         All.Clear();
+    }
+
+    protected override async Task ResetDatabaseAsync(DbConnection connection)
+    {
+        await base.ResetDatabaseAsync(connection);
+        await using var dbCommand = connection.CreateCommand();
+        dbCommand.CommandText = "CHECKPOINT;";
+        await dbCommand.ExecuteNonQueryAsync();
     }
 
     private static string DropAllDatabasesCommand(IEnumerable<string> dbNames)
@@ -89,4 +105,7 @@ public class DatabaseIntegrationFixtureSqlServer(string connectionString, int po
     {
         return new SqlConnection(dbInfo.ConnectionString);
     }
+
+    protected override IDbAdapter DbAdapter { get; } = Respawn.DbAdapter.SqlServer;
+
 }

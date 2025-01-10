@@ -20,17 +20,20 @@ public abstract class DatabaseIntegrationFixture(string testProjectPrefix) : IAs
 
     public abstract ValueTask DisposeAsync();
 
-    protected async Task ResetDatabaseAsync(DbConnection connection)
+    protected virtual async Task ResetDatabaseAsync(DbConnection connection)
     {
         await connection.OpenAsync();
         var respawner = await Respawner.CreateAsync(connection, new RespawnerOptions
         {
             TablesToIgnore = TablesToIgnore,
-            SchemasToExclude = SchemasToExclude
+            SchemasToExclude = SchemasToExclude,
+            DbAdapter = DbAdapter
         });
 
         await respawner.ResetAsync(connection);
     }
+
+    protected abstract IDbAdapter DbAdapter { get; }
 
     public abstract DbConnection GetConnection(DbInfo dbInfo);
 
@@ -45,7 +48,7 @@ public abstract class DatabaseIntegrationFixture(string testProjectPrefix) : IAs
         return string.Format(DbPrefix, TestProjectPrefix.ToLowerInvariant(), poolIndex.ToString());
     }
 
-    public DbInfo? TakeOne()
+    public virtual DbInfo? TakeOne()
     {
         if (Ready.Count == 0)
         {
@@ -57,7 +60,7 @@ public abstract class DatabaseIntegrationFixture(string testProjectPrefix) : IAs
         return dbInfo;
     }
 
-    public void ReturnOne(DbInfo dbInfo)
+    public virtual void ReturnOne(DbInfo dbInfo)
     {
         if (!Used.Contains(dbInfo)) return;
         Used.Pop();

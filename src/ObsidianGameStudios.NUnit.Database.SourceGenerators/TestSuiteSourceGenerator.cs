@@ -95,6 +95,7 @@ public class TestSuiteSourceGenerator : IIncrementalGenerator
     {{
         {classInfo.FullFixtureTypeName}.DatabaseFixture.ReturnOne(CurrentDbInfo);
         await OnTearDownAsync();
+        await {classInfo.FullFixtureTypeName}.DatabaseFixture.ResetDatabaseAsync(CurrentDbInfo);
     }}
 
 

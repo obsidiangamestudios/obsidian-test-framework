@@ -20,7 +20,6 @@ public partial class TestSuiteOne
         await context.DisposeAsync();
     }
 
-
     private TestDbContext GetDbContext()
     {
         var optionsBuilder = new DbContextOptionsBuilder<TestDbContext>();
@@ -43,8 +42,6 @@ public partial class TestSuiteOne
         await context.SaveChangesAsync();
         Assert.That(await context.Posts.CountAsync(), Is.EqualTo(1));
     }
-
-
 
     protected async partial Task OnDisposeAsync()
     {

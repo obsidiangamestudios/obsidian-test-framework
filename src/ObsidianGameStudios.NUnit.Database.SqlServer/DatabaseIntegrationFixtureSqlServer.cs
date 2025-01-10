@@ -65,7 +65,8 @@ public class DatabaseIntegrationFixtureSqlServer(string connectionString, int po
     {
         await base.ResetDatabaseAsync(connection);
         await using var dbCommand = connection.CreateCommand();
-        dbCommand.CommandText = "CHECKPOINT;";
+        dbCommand.CommandText = $"CHECKPOINT;DBCC CHECKDB ('{connection.Database}');DBCC FREEPROCCACHE;";
+
         await dbCommand.ExecuteNonQueryAsync();
     }
 

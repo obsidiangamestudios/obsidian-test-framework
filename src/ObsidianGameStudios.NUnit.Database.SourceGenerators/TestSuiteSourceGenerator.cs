@@ -92,10 +92,11 @@ public class TestSuiteSourceGenerator : IIncrementalGenerator
 
     [TearDown]
     public async Task TearDown()
-    {{
-        {classInfo.FullFixtureTypeName}.DatabaseFixture.ReturnOne(CurrentDbInfo);
+    {{        
         await OnTearDownAsync();
         await {classInfo.FullFixtureTypeName}.DatabaseFixture.ResetDatabaseAsync(CurrentDbInfo);
+        {classInfo.FullFixtureTypeName}.DatabaseFixture.ReturnOne(CurrentDbInfo);
+        CurrentDbInfo = null;
     }}
 
 

@@ -4,6 +4,7 @@ using ObsidianGameStudios.NUnit.Database;
 namespace ObsidianGameStudios.Test.Framework.Tests;
 
 [DatabaseTestSuite(typeof(GlobalDatabaseSetupFixture))]
+[Parallelizable(ParallelScope.None)]
 public partial class TestSuiteTwo : IAsyncDisposable
 {
     private TestDbContext _context = null!;

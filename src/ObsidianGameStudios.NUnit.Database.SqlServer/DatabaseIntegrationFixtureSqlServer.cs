@@ -17,7 +17,7 @@ public class DatabaseIntegrationFixtureSqlServer(string connectionString, int po
             var dbName = GetDbName(i);
             var dbInfo = new DbInfo(_builder.ConnectionString.Replace(_builder.InitialCatalog, dbName), dbName, i);
             await using var command = mainConnection.CreateCommand();
-            Ready.Push(dbInfo);
+            Ready.Enqueue(dbInfo);
             All.Add(dbInfo);
 
             command.CommandText = $"""
@@ -42,7 +42,6 @@ public class DatabaseIntegrationFixtureSqlServer(string connectionString, int po
         if(!dropDatabase)
         {
             Ready.Clear();
-            Used.Clear();
             All.Clear();
 
             return;
@@ -57,7 +56,6 @@ public class DatabaseIntegrationFixtureSqlServer(string connectionString, int po
         await dropAllDatabases.ExecuteNonQueryAsync();
 
         Ready.Clear();
-        Used.Clear();
         All.Clear();
     }
 

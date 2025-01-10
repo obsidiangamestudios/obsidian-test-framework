@@ -84,7 +84,7 @@ public class FixtureSourceGenerator : IIncrementalGenerator
             $@"
  public static DatabaseIntegrationFixtureSqlServer DatabaseFixture;
 
-    public {classInfo.Class.Identifier.Text}()
+    static {classInfo.Class.Identifier.Text}()
     {{
         string connString = Environment.GetEnvironmentVariable(""{classInfo.ConnectionStringName}"") ?? throw new Exception(""{classInfo.ConnectionStringName} environment variable not set."");
         DatabaseFixture = new DatabaseIntegrationFixtureSqlServer(connString, {classInfo.PoolSize}, ""{prefix}"", {classInfo.DropDatabase.ToString().ToLowerInvariant()});

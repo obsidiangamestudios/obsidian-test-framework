@@ -1,10 +1,20 @@
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Linq;
 
 namespace ObsidianGameStudios.NUnit.Database.SourceGenerators;
 
 public static class RoslynUtils
 {
+    public static bool IsPartial(this IMethodSymbol methodSymbol)
+    {
+        return methodSymbol.DeclaringSyntaxReferences
+            .Select(syntaxRef => syntaxRef.GetSyntax())
+            .OfType<MethodDeclarationSyntax>()
+            .Any(methodSyntax => methodSyntax.Modifiers.Any(SyntaxKind.PartialKeyword));
+    }
+
     public static object? GetAttributeValue(
         this SeparatedSyntaxList<AttributeArgumentSyntax> arguments,
         SemanticModel semanticModel,

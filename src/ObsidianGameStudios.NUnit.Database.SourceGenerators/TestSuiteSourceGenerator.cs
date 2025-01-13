@@ -79,8 +79,6 @@ public class TestSuiteSourceGenerator : IIncrementalGenerator
     {
         string code =
             $@"
- 
-    protected DbInfo CurrentDbInfo {{ get; set; }}
 
     [SetUp]
     public async Task Setup()
@@ -104,11 +102,16 @@ public class TestSuiteSourceGenerator : IIncrementalGenerator
     {{
         await OnDisposeAsync();
     }}
-
-    protected partial Task OnDisposeAsync();
-    protected partial Task OnTearDownAsync();
-    protected partial Task OnSetupAsync();
 ";
+
+        if (!classInfo.OnSetupAsync)
+            code += "\nprotected partial Task OnSetupAsync();\n";
+        if (!classInfo.OnTearDownAsync)
+            code += "\nprotected partial Task OnTearDownAsync();\n";
+        if (!classInfo.OnDisposeAsync)
+            code += "\nprotected partial Task OnDisposeAsync();\n";
+        if (!classInfo.HasDbInfoProperty)
+            code += "\nprotected DbInfo CurrentDbInfo { get; set; }\n";
         return code;
     }
 
@@ -116,13 +119,25 @@ public class TestSuiteSourceGenerator : IIncrementalGenerator
     {
         public ClassDeclarationSyntax Class { get; set; }
         public string FullFixtureTypeName { get; set; }
+
+        public bool HasDbInfoProperty { get; set; }
+        public bool OnDisposeAsync { get; set; }
+        public bool OnTearDownAsync { get; set; }
+        public bool OnSetupAsync { get; set; }
     }
 
     private static ClassInfo GetClassDeclarationForSourceGen(GeneratorSyntaxContext context)
     {
         var classDeclarationSyntax = (ClassDeclarationSyntax)context.Node;
+        var classSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclarationSyntax) as INamedTypeSymbol;
 
+        if (classSymbol == null)
+            return new ClassInfo { Class = classDeclarationSyntax };
         ClassInfo classInfo = new() { Class = classDeclarationSyntax };
+        classInfo.HasDbInfoProperty = HasProperty(classSymbol, "CurrentDbInfo");
+        classInfo.OnDisposeAsync = HasMethod(classSymbol, "OnDisposeAsync");
+        classInfo.OnTearDownAsync = HasMethod(classSymbol, "OnTearDownAsync");
+        classInfo.OnSetupAsync = HasMethod(classSymbol, "OnSetupAsync");
         // Find all attributes with the name DataProperty and return the class declaration and the field declaration.
         foreach (var attributeListSyntax in classDeclarationSyntax.AttributeLists)
         {
@@ -151,5 +166,61 @@ public class TestSuiteSourceGenerator : IIncrementalGenerator
         }
 
         return classInfo;
+    }
+
+    private static bool HasProperty(INamedTypeSymbol classSymbol, string propertyName)
+    {
+        // Check if the class or any of its base types define a property with the specified name
+        bool hasProperty = classSymbol
+            .GetMembers()
+            .OfType<IPropertySymbol>()
+            .Any(p => p.Name == propertyName);
+
+        if (!hasProperty)
+        {
+            var baseType = classSymbol.BaseType;
+            while (baseType != null)
+            {
+                hasProperty = baseType
+                    .GetMembers()
+                    .OfType<IPropertySymbol>()
+                    .Any(p => p.Name == propertyName);
+
+                if (hasProperty)
+                    break;
+
+                baseType = baseType.BaseType;
+            }
+        }
+
+        return hasProperty;
+    }
+
+    private static bool HasMethod(INamedTypeSymbol classSymbol, string methodName)
+    {
+        // Check if the class or any of its base types define a method with the specified name
+        bool hasMethod = classSymbol
+            .GetMembers()
+            .OfType<IMethodSymbol>()
+            .Any(m => m.Name == methodName && !m.IsPartial());
+
+        if (!hasMethod)
+        {
+            var baseType = classSymbol.BaseType;
+            while (baseType != null)
+            {
+                hasMethod = baseType
+                    .GetMembers()
+                    .OfType<IMethodSymbol>()
+                    .Any(m => m.Name == methodName);
+
+                if (hasMethod)
+                    break;
+
+                baseType = baseType.BaseType;
+            }
+        }
+
+        return hasMethod;
     }
 }

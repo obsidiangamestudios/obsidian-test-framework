@@ -9,6 +9,8 @@ public partial class TestSuiteTwo : IAsyncDisposable
 {
     private TestDbContext _context = null!;
 
+    protected partial bool ShouldResetDatabase => true;
+
     protected async partial Task OnSetupAsync()
     {
         _context = GetDbContext();

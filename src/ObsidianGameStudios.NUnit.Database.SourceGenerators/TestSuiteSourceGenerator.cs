@@ -85,14 +85,14 @@ public class TestSuiteSourceGenerator : IIncrementalGenerator
     {{
         CurrentDbInfo = {classInfo.FullFixtureTypeName}.DatabaseFixture.TakeOne();
         await OnSetupAsync();
-        await {classInfo.FullFixtureTypeName}.DatabaseFixture.ResetDatabaseAsync(CurrentDbInfo);
     }}
 
     [TearDown]
     public async Task TearDown()
     {{        
         await OnTearDownAsync();
-        await {classInfo.FullFixtureTypeName}.DatabaseFixture.ResetDatabaseAsync(CurrentDbInfo);
+        if (ShouldResetDatabase)
+            await {classInfo.FullFixtureTypeName}.DatabaseFixture.ResetDatabaseAsync(CurrentDbInfo); 
         {classInfo.FullFixtureTypeName}.DatabaseFixture.ReturnOne(CurrentDbInfo);
         CurrentDbInfo = null;
     }}
@@ -102,6 +102,8 @@ public class TestSuiteSourceGenerator : IIncrementalGenerator
     {{
         await OnDisposeAsync();
     }}
+
+    protected partial bool ShouldResetDatabase {{ get; }}
 ";
 
         if (!classInfo.OnSetupAsync)

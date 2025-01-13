@@ -9,6 +9,8 @@ public partial class TestSuiteOne
 {
     private TestDbContext context;
 
+    protected partial bool ShouldResetDatabase => true;
+
     protected partial async Task OnSetupAsync()
     {
         context = GetDbContext();

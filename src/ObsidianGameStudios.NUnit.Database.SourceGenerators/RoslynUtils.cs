@@ -12,7 +12,15 @@ public static class RoslynUtils
         return methodSymbol.DeclaringSyntaxReferences
             .Select(syntaxRef => syntaxRef.GetSyntax())
             .OfType<MethodDeclarationSyntax>()
-            .Any(methodSyntax => methodSyntax.Modifiers.Any(SyntaxKind.PartialKeyword));
+            .Any(syntax => syntax.Modifiers.Any(SyntaxKind.PartialKeyword));
+    }
+
+    public static bool IsPartial(this IPropertySymbol methodSymbol)
+    {
+        return methodSymbol.DeclaringSyntaxReferences
+            .Select(syntaxRef => syntaxRef.GetSyntax())
+            .OfType<PropertyDeclarationSyntax>()
+            .Any(syntax => syntax.Modifiers.Any(SyntaxKind.PartialKeyword));
     }
 
     public static object? GetAttributeValue(

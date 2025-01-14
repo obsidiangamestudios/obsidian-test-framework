@@ -13,6 +13,8 @@ public abstract class TestSuiteBaseClass
     protected abstract Task OnSetupAsync();
 
     protected abstract Task OnTearDownAsync();
+
+    protected bool ShouldResetDatabase => true;
 }
 
 [DatabaseTestSuite(typeof(GlobalDatabaseSetupFixture))]
@@ -22,7 +24,7 @@ public partial class TestSuiteInheritance : TestSuiteBaseClass, IAsyncDisposable
     private TestDbContext _context = null!;
 
 
-    protected partial bool ShouldResetDatabase => true;
+  
 
     protected override async  Task OnSetupAsync()
     {

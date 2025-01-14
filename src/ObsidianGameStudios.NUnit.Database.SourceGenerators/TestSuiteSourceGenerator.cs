@@ -103,9 +103,11 @@ public class TestSuiteSourceGenerator : IIncrementalGenerator
         await OnDisposeAsync();
     }}
 
-    protected partial bool ShouldResetDatabase {{ get; }}
+    
 ";
 
+        if (!classInfo.ShouldResetDatabase)
+            code += "\nprotected partial bool ShouldResetDatabase { get; }\n";
         if (!classInfo.OnSetupAsync)
             code += "\nprotected partial Task OnSetupAsync();\n";
         if (!classInfo.OnTearDownAsync)
@@ -126,6 +128,7 @@ public class TestSuiteSourceGenerator : IIncrementalGenerator
         public bool OnDisposeAsync { get; set; }
         public bool OnTearDownAsync { get; set; }
         public bool OnSetupAsync { get; set; }
+        public bool ShouldResetDatabase { get; set; }
     }
 
     private static ClassInfo GetClassDeclarationForSourceGen(GeneratorSyntaxContext context)
@@ -140,6 +143,7 @@ public class TestSuiteSourceGenerator : IIncrementalGenerator
         classInfo.OnDisposeAsync = HasMethod(classSymbol, "OnDisposeAsync");
         classInfo.OnTearDownAsync = HasMethod(classSymbol, "OnTearDownAsync");
         classInfo.OnSetupAsync = HasMethod(classSymbol, "OnSetupAsync");
+        classInfo.ShouldResetDatabase = HasProperty(classSymbol, "ShouldResetDatabase");
         // Find all attributes with the name DataProperty and return the class declaration and the field declaration.
         foreach (var attributeListSyntax in classDeclarationSyntax.AttributeLists)
         {
@@ -176,7 +180,7 @@ public class TestSuiteSourceGenerator : IIncrementalGenerator
         bool hasProperty = classSymbol
             .GetMembers()
             .OfType<IPropertySymbol>()
-            .Any(p => p.Name == propertyName);
+            .Any(p => p.Name == propertyName && !p.IsPartial());
 
         if (!hasProperty)
         {
